@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class WorldSwitcher : MonoBehaviour
+{
+    private bool isBlackBackground = true;
+    private Camera mainCamera;
+
+    void Start()
+    {
+        mainCamera = Camera.main;
+        
+        // 카메라 배경을 단색(Solid Color)으로 설정
+        mainCamera.clearFlags = CameraClearFlags.SolidColor; 
+        
+        // 게임 시작 시 초기 물리 상태 세팅
+        SwitchWorld(isBlackBackground);
+    }
+
+    void Update()
+    {
+        // 화면 터치 (모바일 터치와 PC 마우스 클릭 모두 작동)
+        if (Input.GetMouseButtonDown(0))
+        {
+            isBlackBackground = !isBlackBackground;
+            SwitchWorld(isBlackBackground);
+        }
+    }
+
+    void SwitchWorld(bool isBlackBg)
+    {
+        if (isBlackBg)
+        {
+            mainCamera.backgroundColor = Color.black;
+            // 8:Player, 9:BlackWall, 10:WhiteWall
+            Physics2D.IgnoreLayerCollision(8, 9, true);  // 검은 벽은 통과
+            Physics2D.IgnoreLayerCollision(8, 10, false); // 흰 벽은 충돌
+        }
+        else
+        {
+            mainCamera.backgroundColor = Color.white;
+            Physics2D.IgnoreLayerCollision(8, 9, false); // 검은 벽은 충돌
+            Physics2D.IgnoreLayerCollision(8, 10, true);  // 흰 벽은 통과
+        }
+    }
+}
